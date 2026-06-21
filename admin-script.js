@@ -1,3 +1,6 @@
+// URL Google Apps Script
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAshlcDI_sVJvD3PiX5qfadFZpXr1Ssg-57aHdq89QRSz8y_0GUudLzx7XOSz39GVoDg/exec';
+
 // Загрузка ответов при открытии страницы
 document.addEventListener('DOMContentLoaded', function() {
     loadAnswers();
@@ -5,9 +8,41 @@ document.addEventListener('DOMContentLoaded', function() {
     setInterval(loadAnswers, 5000);
 });
 
-// Загрузить все ответы из localStorage
-function loadAnswers() {
-    const responses = JSON.parse(localStorage.getItem('dateResponses') || '[]');
+// Загрузить все ответы из localStorage и Google Sheets
+async function loadAnswers() {
+    // Загружаем из Google Sheets
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL);
+        const googleResponses = await response.json();
+
+        // Объединяем с локальными данными
+        const localResponses = JSON.parse(localStorage.getItem('dateResponses') || '[]');
+
+        // Используем Google Sheets как основной источник, дополняем локальными
+        const allResponses = [...googleResponses];
+
+        // Добавляем локальные ответы, которых нет в Google Sheets
+        localResponses.forEach(local => {
+            const exists = allResponses.find(r =>
+                r.timestamp === local.timestamp &&
+                r.meetingPlace === local.meetingPlace
+            );
+            if (!exists) {
+                allResponses.push(local);
+            }
+        });
+
+        displayAnswers(allResponses);
+    } catch (error) {
+        console.error('Ошибка загрузки из Google Sheets:', error);
+        // Если ошибка - показываем локальные данные
+        const responses = JSON.parse(localStorage.getItem('dateResponses') || '[]');
+        displayAnswers(responses);
+    }
+}
+
+// Отобразить ответы
+function displayAnswers(responses) {
     const container = document.getElementById('answersContainer');
 
     // Обновляем статистику
@@ -59,11 +94,11 @@ function loadAnswers() {
 function updateStats(responses) {
     const totalAnswers = responses.length;
     const yesAnswers = responses.filter(r => r.answer === 'Да').length;
-    const lastAnswer = totalAnswers > 0 ? responses[responses.length - 1].timestamp : '—';
+    const lastAnswerTime = totalAnswers > 0 ? responses[responses.length - 1].timestamp : '—';
 
     document.getElementById('totalAnswers').textContent = totalAnswers;
     document.getElementById('yesAnswers').textContent = yesAnswers;
-    document.getElementById('lastAnswer').textContent = lastAnswer;
+    document.getElementById('lastAnswer').textContent = lastAnswerTime;
 }
 
 // Обновить ответы вручную

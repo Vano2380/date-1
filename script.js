@@ -1,6 +1,9 @@
 // Хранение данных ответа
 let responseData = {};
 
+// URL Google Apps Script
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAshlcDI_sVJvD3PiX5qfadFZpXr1Ssg-57aHdq89QRSz8y_0GUudLzx7XOSz39GVoDg/exec';
+
 // Обработка отправки формы
 document.getElementById('dateForm').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -68,14 +71,18 @@ function showResponse(data) {
     saveAnswer(data);
 }
 
-// Сохранить ответ в localStorage
+// Сохранить ответ в localStorage и Google Sheets
 function saveAnswer(data) {
     const timestamp = new Date().toLocaleString('ru-RU');
     data.timestamp = timestamp;
 
+    // Сохраняем в localStorage
     let responses = JSON.parse(localStorage.getItem('dateResponses') || '[]');
     responses.push(data);
     localStorage.setItem('dateResponses', JSON.stringify(responses));
+
+    // Отправляем в Google Sheets
+    sendToGoogleSheets(data);
 
     console.log('✅ Ответ сохранен!', data);
 
@@ -84,6 +91,24 @@ function saveAnswer(data) {
         document.getElementById('responseSection').style.display = 'none';
         document.getElementById('confirmSection').style.display = 'block';
     }, 2000);
+}
+
+// Отправить данные в Google Sheets
+async function sendToGoogleSheets(data) {
+    try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+
+        console.log('✅ Данные отправлены в Google Sheets');
+    } catch (error) {
+        console.error('❌ Ошибка отправки в Google Sheets:', error);
+    }
 }
 
 // Вернуться к форме
