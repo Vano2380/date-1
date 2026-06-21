@@ -1,5 +1,5 @@
 // URL Google Apps Script
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxAshlcDI_sVJvD3PiX5qfadFZpXr1Ssg-57aHdq89QRSz8y_0GUudLzx7XOSz39GVoDg/exec';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxEmi1jHJUqt2uH4mVtM2ERr25a_JGJsU48VozCfq-Fx2ZRNBxnPtctgT_nwBMx7mCbrg/exec';
 
 // Загрузка ответов при открытии страницы
 document.addEventListener('DOMContentLoaded', function() {
