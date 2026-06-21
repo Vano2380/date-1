@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Приглашение ✨</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1 class="title">Привет! 🌸</h1>
+            <p class="subtitle">У меня есть для тебя предложение...</p>
+
+            <div class="question-section">
+                <h2>Не хочешь прогуляться со мной? 💫</h2>
+
+                <form id="dateForm">
+                    <div class="form-group">
+                        <label>Какую прогулку ты предпочитаешь?</label>
+                        <select id="walkType" required>
+                            <option value="">Выбери вариант...</option>
+                            <option value="park">🌳 Просто прогулка</option>
+                            <option value="cafe">☕ Кафе с прогулкой</option>
+                            <option value="river">🌊 Провести день на море</option>
+                            <option value="river">Что угодно...</option>
+                            <option value="river">Чё по кайфу )))</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Когда тебе удобно?</label>
+                        <input type="datetime-local" id="dateTime" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Место встречи:</label>
+                        <input type="text" id="meetingPlace" placeholder="Например: у фонтана в центре" required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-yes">Да</button>
+                        <button type="button" class="btn btn-no" onclick="handleNo()">Нет ❌</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="responseSection" class="response-section" style="display: none;">
+                <div class="response-card">
+                    <h2 id="responseTitle"></h2>
+                    <div id="responseDetails"></div>
+                    <button onclick="resetForm()" class="btn btn-back">Изменить ответ</button>
+                </div>
+            </div>
+
+            <div id="confirmSection" class="confirm-section" style="display: none;">
+                <div class="success-animation">
+                    <div class="checkmark">✓</div>
+                    <h2>Ответ сохранен! 🎉</h2>
+                    <p>Спасибо за ответ</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
